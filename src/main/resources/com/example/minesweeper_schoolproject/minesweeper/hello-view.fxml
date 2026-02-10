@@ -17,9 +17,9 @@
         <ComboBox fx:id="myComboBox" prefWidth="200">
             <items>
                 <FXCollections fx:factory="observableArrayList">
-                    <String fx:value="ONE"/>
-                    <String fx:value="TWO"/>
-                    <String fx:value="THREE"/>
+                    <String fx:value="EASY" />
+                    <String fx:value="MEDIUM" />
+                    <String fx:value="HARD" />
                 </FXCollections>
             </items>
         </ComboBox>

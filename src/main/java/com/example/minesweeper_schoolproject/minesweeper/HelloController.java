@@ -53,9 +53,9 @@ public class HelloController {
                 LevelSelect(Levels.valueOf(selected));
             } catch (IllegalArgumentException e) {
                 switch (selected) {
-                    case "Kezdő (9x9)" -> LevelSelect(Levels.ONE);
-                    case "Haladó (16x16)" -> LevelSelect(Levels.TWO);
-                    case "Profi (20x20)" -> LevelSelect(Levels.THREE);
+                    case "EASY" -> LevelSelect(Levels.ONE);
+                    case "MEDIUM" -> LevelSelect(Levels.TWO);
+                    case "HARD" -> LevelSelect(Levels.THREE);
                     default -> LevelSelect(Levels.ONE);
                 }
             }
