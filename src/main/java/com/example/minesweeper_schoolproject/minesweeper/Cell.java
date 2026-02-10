@@ -13,7 +13,8 @@ public class Cell extends Button {
         this.x = x;
         this.y = y;
         this.hasBomb = hasBomb;
-        setPrefSize(30, 30);
+        setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        setMinSize(10, 10);
         setStyle("-fx-background-radius: 0; -fx-border-color: #777;");
     }
 

@@ -17,9 +17,9 @@
         <ComboBox fx:id="myComboBox" prefWidth="200">
             <items>
                 <FXCollections fx:factory="observableArrayList">
-                    <String fx:id="1" fx:value="Kezdő (9x9)"/>
-                    <String fx:id="2"  fx:value="Haladó (16x16)"/>
-                    <String fx:id="3"  fx:value="Profi (20x20)"/>
+                    <String fx:value="ONE"/>
+                    <String fx:value="TWO"/>
+                    <String fx:value="THREE"/>
                 </FXCollections>
             </items>
         </ComboBox>
@@ -28,5 +28,5 @@
         <Label fx:id="flagLabel" text="Zászló: 0" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
     </HBox>
 
-    <GridPane fx:id="gameGrid" alignment="CENTER" hgap="1" vgap="1"/>
+    <GridPane fx:id="gameGrid" alignment="CENTER" hgap="1" vgap="1" VBox.vgrow="ALWAYS" />
 </VBox>

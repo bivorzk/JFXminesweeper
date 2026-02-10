@@ -3,29 +3,31 @@ package com.example.minesweeper_schoolproject.minesweeper;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 import javafx.util.Duration;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
-public class HelloController  {
+public class HelloController {
 
     @FXML private GridPane gameGrid;
     @FXML private Label timerLabel;
     @FXML private Label flagLabel;
+    @FXML private ComboBox<String> myComboBox;
 
-    private  int SIZE = 20;
-    private  int BOMB_COUNT = 40;
-    private Cell[][] grid = new Cell[SIZE][SIZE];
+    private int SIZE;
+    private int BOMB_COUNT;
+    private Cell[][] grid;
     private int secondsElapsed = 0;
     private int flagsPlaced = 0;
     private Timeline timeline;
@@ -38,6 +40,45 @@ public class HelloController  {
             timerLabel.setText("Idő: " + secondsElapsed);
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
+
+        myComboBox.setOnAction(e -> handleLevelChange());
+        myComboBox.getSelectionModel().selectFirst();
+        handleLevelChange();
+    }
+
+    private void handleLevelChange() {
+        String selected = myComboBox.getValue();
+        if (selected != null) {
+            try {
+                LevelSelect(Levels.valueOf(selected));
+            } catch (IllegalArgumentException e) {
+                switch (selected) {
+                    case "Kezdő (9x9)" -> LevelSelect(Levels.ONE);
+                    case "Haladó (16x16)" -> LevelSelect(Levels.TWO);
+                    case "Profi (20x20)" -> LevelSelect(Levels.THREE);
+                    default -> LevelSelect(Levels.ONE);
+                }
+            }
+        }
+    }
+
+    public void LevelSelect(Levels level) {
+        switch (level) {
+            case ONE:
+                SIZE = 9;
+                BOMB_COUNT = 10;
+                break;
+            case TWO:
+                SIZE = 16;
+                BOMB_COUNT = 26;
+                break;
+            case THREE:
+                SIZE = 20;
+                BOMB_COUNT = 40;
+                break;
+
+        }
+        grid = new Cell[SIZE][SIZE];
         startNewGame();
     }
 
@@ -48,32 +89,46 @@ public class HelloController  {
         gameStarted = false;
         timerLabel.setText("Idő: 0");
         flagLabel.setText("Zászló: " + BOMB_COUNT);
+
         gameGrid.getChildren().clear();
+        gameGrid.getColumnConstraints().clear();
+        gameGrid.getRowConstraints().clear();
+
+        for (int i = 0; i < SIZE; i++) {
+            ColumnConstraints col = new ColumnConstraints();
+            col.setHgrow(Priority.ALWAYS);
+            col.setPercentWidth(100.0 / SIZE);
+            gameGrid.getColumnConstraints().add(col);
+
+            RowConstraints row = new RowConstraints();
+            row.setVgrow(Priority.ALWAYS);
+            row.setPercentHeight(100.0 / SIZE);
+            gameGrid.getRowConstraints().add(row);
+        }
 
         for (int y = 0; y < SIZE; y++) {
             for (int x = 0; x < SIZE; x++) {
                 grid[x][y] = new Cell(x, y, false);
-            }
-        }
-
-        int placed = 0;
-        while (placed < BOMB_COUNT) {
-            int rx = (int)(Math.random() * SIZE);
-            int ry = (int)(Math.random() * SIZE);
-            if (!grid[rx][ry].hasBomb) {
-                grid[rx][ry].hasBomb = true;
-                placed++;
-            }
-        }
-
-        for (int y = 0; y < SIZE; y++) {
-            for (int x = 0; x < SIZE; x++) {
                 Cell cell = grid[x][y];
+                GridPane.setHgrow(cell, Priority.ALWAYS);
+                GridPane.setVgrow(cell, Priority.ALWAYS);
+                cell.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
                 cell.setOnMouseClicked(e -> {
                     if (e.getButton() == MouseButton.PRIMARY) handleLeftClick(cell);
                     else if (e.getButton() == MouseButton.SECONDARY) handleRightClick(cell);
                 });
                 gameGrid.add(cell, x, y);
+            }
+        }
+
+        int placed = 0;
+        while (placed < BOMB_COUNT) {
+            int rx = (int) (Math.random() * SIZE);
+            int ry = (int) (Math.random() * SIZE);
+            if (!grid[rx][ry].hasBomb) {
+                grid[rx][ry].hasBomb = true;
+                placed++;
             }
         }
         setupNumbers();
@@ -120,7 +175,7 @@ public class HelloController  {
         List<Cell> neighbors = new ArrayList<>();
         int[] points = {-1, -1, -1, 0, -1, 1, 0, -1, 0, 1, 1, -1, 1, 0, 1, 1};
         for (int i = 0; i < points.length; i += 2) {
-            int nx = cell.x + points[i], ny = cell.y + points[i+1];
+            int nx = cell.x + points[i], ny = cell.y + points[i + 1];
             if (nx >= 0 && nx < SIZE && ny >= 0 && ny < SIZE) neighbors.add(grid[nx][ny]);
         }
         return neighbors;
@@ -151,23 +206,4 @@ public class HelloController  {
         Optional<ButtonType> res = alert.showAndWait();
         if (res.isPresent() && res.get() == restart) startNewGame();
     }
-
-    public int LevelSelect(Levels object) {
-        switch (object) {
-            case ONE:
-                 SIZE = 9 ;
-                 BOMB_COUNT = 10;
-            case TWO:
-                 SIZE = 16;
-                BOMB_COUNT = 26;
-            case THREE:
-                 SIZE = 20;
-                BOMB_COUNT = 40;
-                default:
-                    return SIZE = 9;
-        }
-
-    }
-
-
 }
