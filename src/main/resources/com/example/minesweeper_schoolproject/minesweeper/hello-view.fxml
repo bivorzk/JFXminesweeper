@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 
 <VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.minesweeper_schoolproject.minesweeper.HelloController">
@@ -10,6 +13,17 @@
     </padding>
 
     <HBox alignment="CENTER" spacing="20" style="-fx-background-color: #eee; -fx-padding: 5; -fx-border-color: #bbb;">
+
+        <ComboBox fx:id="myComboBox" prefWidth="200">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:id="1" fx:value="Kezdő (9x9)"/>
+                    <String fx:id="2"  fx:value="Haladó (16x16)"/>
+                    <String fx:id="3"  fx:value="Profi (20x20)"/>
+                </FXCollections>
+            </items>
+        </ComboBox>
+
         <Label fx:id="timerLabel" text="Idő: 0" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
         <Label fx:id="flagLabel" text="Zászló: 0" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
     </HBox>

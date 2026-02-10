@@ -3,24 +3,28 @@ package com.example.minesweeper_schoolproject.minesweeper;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
+
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
-public class HelloController {
+public class HelloController  {
 
     @FXML private GridPane gameGrid;
     @FXML private Label timerLabel;
     @FXML private Label flagLabel;
 
-    private final int SIZE = 20;
-    private final int BOMB_COUNT = 40;
+    private  int SIZE = 20;
+    private  int BOMB_COUNT = 40;
     private Cell[][] grid = new Cell[SIZE][SIZE];
     private int secondsElapsed = 0;
     private int flagsPlaced = 0;
@@ -147,4 +151,23 @@ public class HelloController {
         Optional<ButtonType> res = alert.showAndWait();
         if (res.isPresent() && res.get() == restart) startNewGame();
     }
+
+    public int LevelSelect(Levels object) {
+        switch (object) {
+            case ONE:
+                 SIZE = 9 ;
+                 BOMB_COUNT = 10;
+            case TWO:
+                 SIZE = 16;
+                BOMB_COUNT = 26;
+            case THREE:
+                 SIZE = 20;
+                BOMB_COUNT = 40;
+                default:
+                    return SIZE = 9;
+        }
+
+    }
+
+
 }
