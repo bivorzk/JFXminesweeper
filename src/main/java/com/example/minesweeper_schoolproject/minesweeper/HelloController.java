@@ -14,6 +14,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.util.Duration;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +33,8 @@ public class HelloController {
     private int flagsPlaced = 0;
     private Timeline timeline;
     private boolean gameStarted = false;
+
+    private static final SecureRandom secureRandom = new SecureRandom();
 
     @FXML
     public void initialize() {
@@ -124,8 +127,8 @@ public class HelloController {
 
         int placed = 0;
         while (placed < BOMB_COUNT) {
-            int rx = (int) (Math.random() * SIZE);
-            int ry = (int) (Math.random() * SIZE);
+            int rx = (int) (Math.abs(nextSeed()) % SIZE);
+            int ry = (int) (Math.abs(nextSeed()) % SIZE);
             if (!grid[rx][ry].hasBomb) {
                 grid[rx][ry].hasBomb = true;
                 placed++;
@@ -205,5 +208,9 @@ public class HelloController {
         alert.getButtonTypes().setAll(restart, ButtonType.CLOSE);
         Optional<ButtonType> res = alert.showAndWait();
         if (res.isPresent() && res.get() == restart) startNewGame();
+    }
+
+    private static long nextSeed() {
+        return secureRandom.nextLong();
     }
 }
