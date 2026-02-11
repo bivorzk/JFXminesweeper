@@ -64,7 +64,20 @@ public class HelloController {
             }
         }
     }
-
+    public void selectAlgorithm(Algorithms Algorithms) {
+        switch (Algorithms) {
+            case DFS:
+                // Implement DFS-based bomb placement
+                break;
+            case FYS:
+                // Implement Fisher-Yates Shuffle for bomb placement
+                break;
+            case FLOOD_FILL:
+                // Implement Flood Fill algorithm for bomb placement
+                break;
+        }
+        // Placeholder for algorithm selection logic
+    }
     public void LevelSelect(Levels level) {
         switch (level) {
             case ONE:
