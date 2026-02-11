@@ -15,7 +15,8 @@ public class Cell extends Button {
         this.hasBomb = hasBomb;
         setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         setMinSize(10, 10);
-        setStyle("-fx-background-radius: 0; -fx-border-color: #777;");
+        this.getStyleClass().add("button");
+        this.getStyleClass().add("mine-cell");
     }
 
     public void toggleFlag() {
@@ -23,33 +24,28 @@ public class Cell extends Button {
         isFlagged = !isFlagged;
         if (isFlagged) {
             setText("🚩");
-            setStyle("-fx-background-color: black; -fx-background-radius: 0; -fx-text-fill: white;");
+
+            if (!getStyleClass().contains("flagged")) {
+                getStyleClass().add("flagged");
+            }
         } else {
             setText("");
-            setStyle("-fx-background-radius: 0; -fx-border-color: #777;");
+            getStyleClass().remove("flagged");
         }
     }
 
     public void reveal() {
         if (isOpen || isFlagged) return;
         isOpen = true;
-        setDisable(true);
+
+        this.getStyleClass().add("revealed");
+
         if (hasBomb) {
+            this.getStyleClass().add("bomb");
             setText("💣");
-            setStyle("-fx-background-color: red; -fx-opacity: 1; -fx-text-fill: black;");
-        } else {
-            setStyle("-fx-background-color: #eeeeee; -fx-opacity: 1; -fx-border-color: #ccc;");
-            if (neighboringBombs > 0) {
-                setText(String.valueOf(neighboringBombs));
-                String color = switch (neighboringBombs) {
-                    case 1 -> "blue";
-                    case 2 -> "green";
-                    case 3 -> "red";
-                    case 4 -> "darkblue";
-                    default -> "darkred";
-                };
-                setStyle(getStyle() + "-fx-text-fill: " + color + "; -fx-font-weight: bold;");
-            }
+        } else if (neighboringBombs > 0) {
+            setText(String.valueOf(neighboringBombs));
+            this.getStyleClass().add("count-" + neighboringBombs);
         }
     }
-}
+    }

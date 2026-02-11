@@ -1,0 +1,57 @@
+@font-face {
+    font-family: "fontsweeper";
+    src: url("retro.otf");
+}
+
+.root {
+    -fx-background-color: #3D2412;
+    -fx-font-family: "fontsweeper";
+}
+
+.hbox {
+    -fx-background-color: #2c2f33;
+    -fx-padding: 15;
+    -fx-border-color: #2c2f33;
+    -fx-border-width: 0 0 2 0;
+}
+
+
+.label {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+}
+
+.mine-cell {
+
+    -fx-background-color: #B87333  ;
+    -fx-border-color: #eee #7b7b7b #7b7b7b #eee; /* 3D hatás */
+    -fx-border-width: 2;
+    -fx-background-radius: 0;
+}
+
+
+.revealed {
+    -fx-background-color: 	#DAA06D;
+    -fx-border-color: #7b7b7b;
+    -fx-border-width: 0.5;
+}
+
+
+.bomb {
+    -fx-background-color: #FF0000;
+}
+
+.flagged{
+-fx-background-color:#895129;
+    -fx-text-fill: #FF0000;
+    -fx-font-size: 25px;
+}
+.count-1 { -fx-text-fill: blue; -fx-font-weight: bold; -fx-font-size:24px; -fx-font-family:"fontsweeper"; }
+.count-2 { -fx-text-fill: green; -fx-font-weight: bold; -fx-font-size:24px;-fx-font-family:"fontsweeper"; }
+.count-3 { -fx-text-fill: red; -fx-font-weight: bold; -fx-font-size:24px;-fx-font-family:"fontsweeper"; }
+.count-4 { -fx-text-fill: darkblue; -fx-font-weight: bold; -fx-font-size:24px;-fx-font-family:"fontsweeper"; }
+
+
+.revealed:disabled, .bomb:disabled {
+    -fx-opacity: 1.0;
+}
