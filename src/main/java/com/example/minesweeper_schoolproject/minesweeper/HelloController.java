@@ -40,7 +40,7 @@ public class HelloController {
     public void initialize() {
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             secondsElapsed++;
-            timerLabel.setText("Idő: " + secondsElapsed);
+            timerLabel.setText("Time: " + secondsElapsed);
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
 
@@ -90,8 +90,8 @@ public class HelloController {
         secondsElapsed = 0;
         flagsPlaced = 0;
         gameStarted = false;
-        timerLabel.setText("Idő: 0");
-        flagLabel.setText("Zászló: " + BOMB_COUNT);
+        timerLabel.setText("Time: 0");
+        flagLabel.setText("Flags: " + BOMB_COUNT);
 
         gameGrid.getChildren().clear();
         gameGrid.getColumnConstraints().clear();
@@ -113,6 +113,9 @@ public class HelloController {
             for (int x = 0; x < SIZE; x++) {
                 grid[x][y] = new Cell(x, y, false);
                 Cell cell = grid[x][y];
+
+                cell.getStyleClass().add("mine-cell");
+
                 GridPane.setHgrow(cell, Priority.ALWAYS);
                 GridPane.setVgrow(cell, Priority.ALWAYS);
                 cell.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -145,7 +148,7 @@ public class HelloController {
         }
         cell.reveal();
         if (cell.hasBomb) {
-            showEndGameDialog("Vége a játéknak!");
+            showEndGameDialog("BOMBOOCLAAAT!");
         } else if (cell.neighboringBombs == 0) {
             getNeighbors(cell).forEach(this::handleLeftClick);
         }
@@ -161,7 +164,7 @@ public class HelloController {
             cell.toggleFlag();
             flagsPlaced--;
         }
-        flagLabel.setText("Zászló: " + (BOMB_COUNT - flagsPlaced));
+        flagLabel.setText("Flag: " + (BOMB_COUNT - flagsPlaced));
     }
 
     private void setupNumbers() {
@@ -194,7 +197,7 @@ public class HelloController {
                 }
             }
         }
-        if (won) showEndGameDialog("Győzelem!");
+        if (won) showEndGameDialog("WIN!");
     }
 
     private void showEndGameDialog(String msg) {
@@ -203,8 +206,8 @@ public class HelloController {
             for (Cell c : row) if (c.hasBomb) c.reveal();
         }
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setContentText(msg + "\nIdő: " + secondsElapsed + "s\nÚj játék?");
-        ButtonType restart = new ButtonType("Újrakezdés");
+        alert.setContentText(msg + "\nTime: " + secondsElapsed + "s\nNew Game?");
+        ButtonType restart = new ButtonType("Restart");
         alert.getButtonTypes().setAll(restart, ButtonType.CLOSE);
         Optional<ButtonType> res = alert.showAndWait();
         if (res.isPresent() && res.get() == restart) startNewGame();
