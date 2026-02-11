@@ -222,6 +222,7 @@ public class HelloController {
         alert.setContentText(msg + "\nTime: " + secondsElapsed + "s\nNew Game?");
         ButtonType restart = new ButtonType("Restart");
         alert.getButtonTypes().setAll(restart, ButtonType.CLOSE);
+        alert.setOnCloseRequest(e -> startNewGame());
         Optional<ButtonType> res = alert.showAndWait();
         if (res.isPresent() && res.get() == restart) startNewGame();
     }
