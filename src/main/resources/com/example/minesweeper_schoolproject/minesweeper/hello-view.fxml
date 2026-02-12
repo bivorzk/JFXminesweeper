@@ -5,51 +5,59 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
 
-<VBox alignment="CENTER" spacing="10" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.minesweeper_schoolproject.minesweeper.HelloController">
+<VBox fx:id="mainRoot" alignment="TOP_CENTER" onMousePressed="#handleEmojiPressed" onMouseReleased="#handleEmojiReleased" spacing="10" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.minesweeper_schoolproject.minesweeper.HelloController">
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
 
-    <HBox alignment="BASELINE_LEFT" spacing="20">
+    <GridPane hgap="0" vgap="10">
+        <columnConstraints>
+            <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" percentWidth="33.3" />
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" percentWidth="33.4" />
+            <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" percentWidth="33.3" />
+        </columnConstraints>
 
-        <ComboBox fx:id="myComboBox" prefWidth="200" styleClass="myComboBox">
-            <items>
-                <FXCollections fx:factory="observableArrayList">
-                    <String fx:value="EASY" />
-                    <String fx:value="MEDIUM" />
-                    <String fx:value="HARD" />
-                </FXCollections>
-            </items>
-        </ComboBox>
+        <VBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <ComboBox fx:id="myComboBox" prefWidth="180" promptText="Difficulty" style="-fx-font-size: 15; -fx-font-weight: bold; " styleClass="myComboBox">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="EASY" />
+                        <String fx:value="MEDIUM" />
+                        <String fx:value="HARD" />
+                    </FXCollections>
+                </items>
+            </ComboBox>
 
+            <ComboBox fx:id="algorithmComboBox" prefWidth="180" promptText="Algorithm" style="-fx-font-size: 15; -fx-font-weight: bold;  " styleClass="myComboBox">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="DFS" />
+                        <String fx:value="DFS_HARD" />
+                        <String fx:value="FYS" />
+                    </FXCollections>
+                </items>
+            </ComboBox>
+        </VBox>
 
+        <StackPane alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="0">
+            <Circle fill="#FFD700" radius="25" />
+            <Button fx:id="resetButton" alignment="CENTER" contentDisplay="TEXT_ONLY" onAction="#startNewGame"
+                    style="-fx-background-color: transparent; -fx-font-size: 46; -fx-cursor: hand; -fx-padding: 0; -fx-min-width: 60; -fx-min-height: 60;"
+                    text="🙂" textAlignment="CENTER" translateY="2" />
+        </StackPane>
 
-    </HBox>
+        <VBox alignment="CENTER_RIGHT" spacing="15" GridPane.columnIndex="2" GridPane.rowIndex="0">
+            <Label fx:id="timerLabel" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: white; " text="Time: 0" />
+            <Label fx:id="flagLabel" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: white; " text="Flags: 10" />
+        </VBox>
+        <rowConstraints>
+            <RowConstraints />
+        </rowConstraints>
+    </GridPane>
 
-    <HBox alignment="BASELINE_LEFT" spacing="20">
-
-        <ComboBox fx:id="algorithmComboBox" prefWidth="200" styleClass="myComboBox">
-            <items>
-                <FXCollections fx:factory="observableArrayList">
-                    <String fx:value="DFS" />
-                    <String fx:value="DFS_HARD"/>
-                    <String fx:value="FYS" />
-                </FXCollections>
-            </items>
-        </ComboBox>
-
-
-
-    </HBox>
-
-    <HBox alignment="BASELINE_RIGHT" spacing="20">
-    <Label fx:id="timerLabel"  alignment="CENTER_RIGHT" contentDisplay="RIGHT" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-alignment:right;" text="Idő: 0" textAlignment="CENTER">
-
-    </Label>
-    <Label fx:id="flagLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-alignment:right;" text="Zászló: 0" textAlignment="CENTER">
-    </Label>
-    </HBox>
+    <Region prefHeight="10" />
 
     <GridPane fx:id="gameGrid" alignment="CENTER" hgap="1" vgap="1" VBox.vgrow="ALWAYS" />
 </VBox>

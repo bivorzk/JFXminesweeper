@@ -22,8 +22,6 @@
 
 }
 
-
-
 .mine-cell {
 
     -fx-background-color: #B87333  ;
@@ -61,13 +59,10 @@
     -fx-padding: 5 0 5 30;
 }
 
+
 .list-cell{
 -fx-alignment: center;
 }
-
-
-
-
 
 .myComboBox > .list-cell {
     -fx-alignment: center;

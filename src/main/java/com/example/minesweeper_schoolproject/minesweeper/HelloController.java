@@ -3,10 +3,7 @@ package com.example.minesweeper_schoolproject.minesweeper;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -21,7 +18,7 @@ import java.util.Optional;
 import java.util.Stack;
 
 public class HelloController {
-
+    @FXML private Button resetButton;
     @FXML private GridPane gameGrid;
     @FXML private Label timerLabel;
     @FXML private Label flagLabel;
@@ -48,25 +45,32 @@ public class HelloController {
         timeline.setCycleCount(Timeline.INDEFINITE);
 
         myComboBox.setOnAction(e -> handleLevelChange());
-        myComboBox.getSelectionModel().selectFirst();
-        handleLevelChange();
-
         algorithmComboBox.setOnAction(e -> handleAlgorithmChange());
-        algorithmComboBox.getSelectionModel().select("FYS");
+
+        LevelSelect(Levels.ONE);
+    }
+
+    @FXML
+    public void handleEmojiPressed() {
+        if (resetButton != null) {
+            resetButton.setText("😮");
+        }
+    }
+
+    @FXML
+    public void handleEmojiReleased() {
+        if (resetButton != null) {
+            resetButton.setText("🙂");
+        }
     }
 
     private void handleLevelChange() {
         String selected = myComboBox.getValue();
         if (selected != null) {
-            try {
-                LevelSelect(Levels.valueOf(selected));
-            } catch (IllegalArgumentException e) {
-                switch (selected) {
-                    case "EASY" -> LevelSelect(Levels.ONE);
-                    case "MEDIUM" -> LevelSelect(Levels.TWO);
-                    case "HARD" -> LevelSelect(Levels.THREE);
-                    default -> LevelSelect(Levels.ONE);
-                }
+            switch (selected) {
+                case "EASY" -> LevelSelect(Levels.ONE);
+                case "MEDIUM" -> LevelSelect(Levels.TWO);
+                case "HARD" -> LevelSelect(Levels.THREE);
             }
         }
     }
@@ -74,10 +78,12 @@ public class HelloController {
     private void handleAlgorithmChange() {
         String selected = algorithmComboBox.getValue();
         if (selected != null) {
-            currentAlgorithm = Algorithms.valueOf(selected);
-            if (gameStarted) {
-                startNewGame();
+            try {
+                currentAlgorithm = Algorithms.valueOf(selected);
+            } catch (Exception e) {
+                currentAlgorithm = Algorithms.FYS;
             }
+            startNewGame();
         }
     }
 
@@ -97,24 +103,20 @@ public class HelloController {
                 startX = secureRandom.nextInt(SIZE);
                 startY = secureRandom.nextInt(SIZE);
             } while (forb[startX][startY]);
-
             stack.push(grid[startX][startY]);
             visited[startX][startY] = true;
         }
 
         switch (algorithm) {
-            case DFS: // DFS with 30% Probability Skip
+            case DFS:
                 while (!stack.isEmpty() && placed < BOMB_COUNT) {
                     Cell current = stack.pop();
-
                     if (!forb[current.x][current.y] && !current.hasBomb) {
-                        // Only place a bomb 30% of the time
                         if (secureRandom.nextDouble() < 0.3) {
                             current.hasBomb = true;
                             placed++;
                         }
                     }
-
                     List<Cell> neighbors = getNeighbors(current);
                     java.util.Collections.shuffle(neighbors, secureRandom);
                     for (Cell n : neighbors) {
@@ -125,21 +127,16 @@ public class HelloController {
                     }
                 }
                 break;
-
-            case DFS_HARD: // DFS with Distance Check (No adjacent bombs)
+            case DFS_HARD:
                 while (!stack.isEmpty() && placed < BOMB_COUNT) {
                     Cell current = stack.pop();
-
                     if (!forb[current.x][current.y] && !current.hasBomb) {
-                        // Check if any neighbor already has a bomb
                         boolean neighborHasBomb = getNeighbors(current).stream().anyMatch(n -> n.hasBomb);
-
                         if (!neighborHasBomb) {
                             current.hasBomb = true;
                             placed++;
                         }
                     }
-
                     List<Cell> neighbors = getNeighbors(current);
                     java.util.Collections.shuffle(neighbors, secureRandom);
                     for (Cell n : neighbors) {
@@ -150,7 +147,6 @@ public class HelloController {
                     }
                 }
                 break;
-
             case FYS:
                 List<int[]> positions = new ArrayList<>();
                 for (int x = 0; x < SIZE; x++) {
@@ -165,9 +161,6 @@ public class HelloController {
                 }
                 break;
         }
-
-        // If DFS variations didn't reach BOMB_COUNT 
-        // (due to probability or distance constraints), fill the rest randomly.
         while (placed < BOMB_COUNT) {
             int rx = secureRandom.nextInt(SIZE);
             int ry = secureRandom.nextInt(SIZE);
@@ -177,26 +170,18 @@ public class HelloController {
             }
         }
     }
+
     public void LevelSelect(Levels level) {
         switch (level) {
-            case ONE:
-                SIZE = 9;
-                BOMB_COUNT = 10;
-                break;
-            case TWO:
-                SIZE = 16;
-                BOMB_COUNT = 26;
-                break;
-            case THREE:
-                SIZE = 20;
-                BOMB_COUNT = 40;
-                break;
-
+            case ONE -> { SIZE = 9; BOMB_COUNT = 10; }
+            case TWO -> { SIZE = 16; BOMB_COUNT = 26; }
+            case THREE -> { SIZE = 20; BOMB_COUNT = 40; }
         }
         grid = new Cell[SIZE][SIZE];
         startNewGame();
     }
 
+    @FXML
     private void startNewGame() {
         timeline.stop();
         secondsElapsed = 0;
@@ -204,7 +189,7 @@ public class HelloController {
         gameStarted = false;
         timerLabel.setText("Time: 0");
         flagLabel.setText("Flags: " + BOMB_COUNT);
-
+        resetButton.setText("🙂");
 
         gameGrid.getChildren().clear();
         gameGrid.getColumnConstraints().clear();
@@ -212,12 +197,9 @@ public class HelloController {
 
         for (int i = 0; i < SIZE; i++) {
             ColumnConstraints col = new ColumnConstraints();
-            col.setHgrow(Priority.ALWAYS);
             col.setPercentWidth(100.0 / SIZE);
             gameGrid.getColumnConstraints().add(col);
-
             RowConstraints row = new RowConstraints();
-            row.setVgrow(Priority.ALWAYS);
             row.setPercentHeight(100.0 / SIZE);
             gameGrid.getRowConstraints().add(row);
         }
@@ -242,7 +224,6 @@ public class HelloController {
                 gameGrid.add(cell, x, y);
             }
         }
-
     }
 
     private void handleLeftClick(Cell cell) {
@@ -258,6 +239,7 @@ public class HelloController {
         }
         cell.reveal();
         if (cell.hasBomb) {
+            resetButton.setText("\uD83D\uDE1E");
             showEndGameDialog("BOMBOOCLAAAT!");
         } else if (cell.neighboringBombs == 0) {
             getNeighbors(cell).forEach(this::handleLeftClick);
@@ -274,7 +256,7 @@ public class HelloController {
             cell.toggleFlag();
             flagsPlaced--;
         }
-        flagLabel.setText("Flag: " + (BOMB_COUNT - flagsPlaced));
+        flagLabel.setText("Flags: " + (BOMB_COUNT - flagsPlaced));
     }
 
     private void setupNumbers() {
@@ -301,13 +283,13 @@ public class HelloController {
         boolean won = true;
         for (Cell[] row : grid) {
             for (Cell c : row) {
-                if (!c.hasBomb && !c.isOpen) {
-                    won = false;
-                    break;
-                }
+                if (!c.hasBomb && !c.isOpen) { won = false; break; }
             }
         }
-        if (won) showEndGameDialog("WIN!");
+        if (won) {
+            resetButton.setText("😎");
+            showEndGameDialog("WIN!");
+        }
     }
 
     private void showEndGameDialog(String msg) {
@@ -316,13 +298,11 @@ public class HelloController {
             for (Cell c : row) if (c.hasBomb) c.reveal();
         }
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText(null);
         alert.setContentText(msg + "\nTime: " + secondsElapsed + "s\nNew Game?");
         ButtonType restart = new ButtonType("Restart");
         alert.getButtonTypes().setAll(restart, ButtonType.CLOSE);
-        alert.setOnCloseRequest(e -> startNewGame());
         Optional<ButtonType> res = alert.showAndWait();
         if (res.isPresent() && res.get() == restart) startNewGame();
     }
-
-
 }
