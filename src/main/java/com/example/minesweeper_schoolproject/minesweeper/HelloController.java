@@ -119,7 +119,9 @@ public class HelloController {
                 GridPane.setHgrow(cell, Priority.ALWAYS);
                 GridPane.setVgrow(cell, Priority.ALWAYS);
                 cell.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-
+                cell.styleProperty().bind(javafx.beans.binding.Bindings.concat(
+                        "-fx-font-size: ", cell.widthProperty().multiply(0.35).asString(), "px;"
+                ));
                 cell.setOnMouseClicked(e -> {
                     if (e.getButton() == MouseButton.PRIMARY) handleLeftClick(cell);
                     else if (e.getButton() == MouseButton.SECONDARY) handleRightClick(cell);

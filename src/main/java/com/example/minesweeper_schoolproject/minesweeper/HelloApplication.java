@@ -12,12 +12,13 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        Font retroFont = Font.loadFont(getClass().getResource("/com/example/minesweeper_schoolproject/minesweeper/fontsweeper.otf").toExternalForm(), 14);
-        if (retroFont != null) System.out.println("Sikeres betöltés: " + retroFont.getFamily());
-        else System.out.println("Hiba: A betűtípus nem található!");
+        Font.loadFont(getClass().getResource("/com/example/minesweeper_schoolproject/minesweeper/fontsweeper.otf").toExternalForm(), 14);
+        //if (retroFont != null) System.out.println("Sikeres betöltés: " + retroFont.getFamily());
+        //else System.out.println("Hiba: A betűtípus nem található!");
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 620, 620);
+        Scene scene = new Scene(fxmlLoader.load(), 800, 800);
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+        stage.setResizable(false);
         stage.setTitle("MineSweeper");
         stage.setScene(scene);
         stage.show();
