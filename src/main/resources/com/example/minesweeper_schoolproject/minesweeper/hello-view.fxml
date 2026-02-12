@@ -27,6 +27,22 @@
 
     </HBox>
 
+    <HBox alignment="BASELINE_LEFT" spacing="20">
+
+        <ComboBox fx:id="algorithmComboBox" prefWidth="200" styleClass="myComboBox">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="DFS" />
+                    <String fx:value="DFS_HARD"/>
+                    <String fx:value="FYS" />
+                </FXCollections>
+            </items>
+        </ComboBox>
+
+
+
+    </HBox>
+
     <HBox alignment="BASELINE_RIGHT" spacing="20">
     <Label fx:id="timerLabel"  alignment="CENTER_RIGHT" contentDisplay="RIGHT" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-alignment:right;" text="Idő: 0" textAlignment="CENTER">
 

@@ -18,6 +18,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Stack;
 
 public class HelloController {
 
@@ -25,6 +26,7 @@ public class HelloController {
     @FXML private Label timerLabel;
     @FXML private Label flagLabel;
     @FXML private ComboBox<String> myComboBox;
+    @FXML private ComboBox<String> algorithmComboBox;
 
     private int SIZE;
     private int BOMB_COUNT;
@@ -33,6 +35,7 @@ public class HelloController {
     private int flagsPlaced = 0;
     private Timeline timeline;
     private boolean gameStarted = false;
+    private Algorithms currentAlgorithm = Algorithms.FYS;
 
     private static final SecureRandom secureRandom = new SecureRandom();
 
@@ -47,6 +50,9 @@ public class HelloController {
         myComboBox.setOnAction(e -> handleLevelChange());
         myComboBox.getSelectionModel().selectFirst();
         handleLevelChange();
+
+        algorithmComboBox.setOnAction(e -> handleAlgorithmChange());
+        algorithmComboBox.getSelectionModel().select("FYS");
     }
 
     private void handleLevelChange() {
@@ -64,19 +70,112 @@ public class HelloController {
             }
         }
     }
-    public void selectAlgorithm(Algorithms Algorithms) {
-        switch (Algorithms) {
-            case DFS:
-                // Implement DFS-based bomb placement
+
+    private void handleAlgorithmChange() {
+        String selected = algorithmComboBox.getValue();
+        if (selected != null) {
+            currentAlgorithm = Algorithms.valueOf(selected);
+            if (gameStarted) {
+                startNewGame();
+            }
+        }
+    }
+
+    private void placeBombs(Algorithms algorithm, List<Cell> forbidden) {
+        boolean[][] forb = new boolean[SIZE][SIZE];
+        for (Cell c : forbidden) {
+            forb[c.x][c.y] = true;
+        }
+
+        int placed = 0;
+        boolean[][] visited = new boolean[SIZE][SIZE];
+        Stack<Cell> stack = new Stack<>();
+
+        if (algorithm == Algorithms.DFS || algorithm.name().equals("DFS_HARD")) {
+            int startX, startY;
+            do {
+                startX = secureRandom.nextInt(SIZE);
+                startY = secureRandom.nextInt(SIZE);
+            } while (forb[startX][startY]);
+
+            stack.push(grid[startX][startY]);
+            visited[startX][startY] = true;
+        }
+
+        switch (algorithm) {
+            case DFS: // DFS with 30% Probability Skip
+                while (!stack.isEmpty() && placed < BOMB_COUNT) {
+                    Cell current = stack.pop();
+
+                    if (!forb[current.x][current.y] && !current.hasBomb) {
+                        // Only place a bomb 30% of the time
+                        if (secureRandom.nextDouble() < 0.3) {
+                            current.hasBomb = true;
+                            placed++;
+                        }
+                    }
+
+                    List<Cell> neighbors = getNeighbors(current);
+                    java.util.Collections.shuffle(neighbors, secureRandom);
+                    for (Cell n : neighbors) {
+                        if (!visited[n.x][n.y]) {
+                            visited[n.x][n.y] = true;
+                            stack.push(n);
+                        }
+                    }
+                }
                 break;
+
+            case DFS_HARD: // DFS with Distance Check (No adjacent bombs)
+                while (!stack.isEmpty() && placed < BOMB_COUNT) {
+                    Cell current = stack.pop();
+
+                    if (!forb[current.x][current.y] && !current.hasBomb) {
+                        // Check if any neighbor already has a bomb
+                        boolean neighborHasBomb = getNeighbors(current).stream().anyMatch(n -> n.hasBomb);
+
+                        if (!neighborHasBomb) {
+                            current.hasBomb = true;
+                            placed++;
+                        }
+                    }
+
+                    List<Cell> neighbors = getNeighbors(current);
+                    java.util.Collections.shuffle(neighbors, secureRandom);
+                    for (Cell n : neighbors) {
+                        if (!visited[n.x][n.y]) {
+                            visited[n.x][n.y] = true;
+                            stack.push(n);
+                        }
+                    }
+                }
+                break;
+
             case FYS:
-                // Implement Fisher-Yates Shuffle for bomb placement
-                break;
-            case FLOOD_FILL:
-                // Implement Flood Fill algorithm for bomb placement
+                List<int[]> positions = new ArrayList<>();
+                for (int x = 0; x < SIZE; x++) {
+                    for (int y = 0; y < SIZE; y++) positions.add(new int[]{x, y});
+                }
+                java.util.Collections.shuffle(positions, secureRandom);
+                for (int[] pos : positions) {
+                    if (!forb[pos[0]][pos[1]] && placed < BOMB_COUNT) {
+                        grid[pos[0]][pos[1]].hasBomb = true;
+                        placed++;
+                    }
+                }
                 break;
         }
-        // Placeholder for algorithm selection logic
+
+        // If DFS variations didn't reach BOMB_COUNT 
+        // (due to probability or distance constraints), fill the rest randomly.
+        while (placed < BOMB_COUNT) {
+            int rx = secureRandom.nextInt(SIZE);
+            int ry = secureRandom.nextInt(SIZE);
+            if (!forb[rx][ry] && !grid[rx][ry].hasBomb) {
+                grid[rx][ry].hasBomb = true;
+                placed++;
+            }
+        }
     }
     public void LevelSelect(Levels level) {
         switch (level) {
@@ -144,21 +243,16 @@ public class HelloController {
             }
         }
 
-        int placed = 0;
-        while (placed < BOMB_COUNT) {
-            int rx = (int) (Math.abs(nextSeed()) % SIZE);
-            int ry = (int) (Math.abs(nextSeed()) % SIZE);
-            if (!grid[rx][ry].hasBomb) {
-                grid[rx][ry].hasBomb = true;
-                placed++;
-            }
-        }
-        setupNumbers();
     }
 
     private void handleLeftClick(Cell cell) {
         if (cell.isOpen || cell.isFlagged) return;
         if (!gameStarted) {
+            List<Cell> forbidden = new ArrayList<>();
+            forbidden.add(cell);
+            forbidden.addAll(getNeighbors(cell));
+            placeBombs(currentAlgorithm, forbidden);
+            setupNumbers();
             timeline.play();
             gameStarted = true;
         }
@@ -230,7 +324,5 @@ public class HelloController {
         if (res.isPresent() && res.get() == restart) startNewGame();
     }
 
-    private static long nextSeed() {
-        return secureRandom.nextLong();
-    }
+
 }
