@@ -6,7 +6,7 @@ module com.example.minesweeper_schoolproject.minesweeper {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires com.almasb.fxgl.all;
-    requires jnativehook;
+
 
     opens com.example.minesweeper_schoolproject.minesweeper to javafx.fxml;
     exports com.example.minesweeper_schoolproject.minesweeper;

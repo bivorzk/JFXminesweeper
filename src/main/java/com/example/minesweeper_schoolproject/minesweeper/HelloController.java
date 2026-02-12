@@ -106,6 +106,7 @@ public class HelloController {
         timerLabel.setText("Time: 0");
         flagLabel.setText("Flags: " + BOMB_COUNT);
 
+
         gameGrid.getChildren().clear();
         gameGrid.getColumnConstraints().clear();
         gameGrid.getRowConstraints().clear();

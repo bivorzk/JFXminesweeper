@@ -19,7 +19,10 @@
 .label {
     -fx-text-fill: #ffffff;
 
+
 }
+
+
 
 .mine-cell {
 
@@ -61,6 +64,10 @@
 .list-cell{
 -fx-alignment: center;
 }
+
+
+
+
 
 .myComboBox > .list-cell {
     -fx-alignment: center;
