@@ -305,4 +305,6 @@ public class HelloController {
         Optional<ButtonType> res = alert.showAndWait();
         if (res.isPresent() && res.get() == restart) startNewGame();
     }
+
+
 }
