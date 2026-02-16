@@ -97,4 +97,18 @@ public class tests {
         assertEquals(20, size);
         assertEquals(40, bombs);
     }
+    
+    // TODO 
+    // Test level two selection
+    // Test timer starts on first click
+    // Test flag count decreases when placing a flag
+    // Test algorithms work correctly 
+    // Test DFS whether it's really placing bombs correctly 
+    // Tests FYS? not sure if doable
+    // Test reset button functionality
+    // Test combo box selections overall
+    // Test edge cases like clicking on corners, clicking on already revealed cells, etc.
+    
+    
+    
 }
