@@ -43,7 +43,7 @@
 
         <StackPane alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="0">
             <Circle fill="#FFD700" radius="25" />
-            <Button fx:id="resetButton" alignment="CENTER" contentDisplay="TEXT_ONLY" onAction="#startNewGame"
+            <Button fx:id="resetButton" alignment="CENTER" contentDisplay="TEXT_ONLY" onAction="#handleReset"
                     style="-fx-background-color: transparent; -fx-font-size: 46; -fx-cursor: hand; -fx-padding: 0; -fx-min-width: 60; -fx-min-height: 60;"
                     text="🙂" textAlignment="CENTER" translateY="2" />
         </StackPane>

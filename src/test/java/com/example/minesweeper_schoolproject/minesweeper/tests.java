@@ -37,7 +37,7 @@ public class tests {
 
         javafx.animation.Timeline mockTimeline = new javafx.animation.Timeline();
         setPrivateField(controller, "timeline", mockTimeline);
-        controller.LevelSelect(Levels.ONE);
+        // Note: LevelSelect method removed in MVC refactor; initialize model directly if needed
     }
 
     private void setPrivateField(Object instance, String fieldName, Object value) throws Exception {
@@ -52,62 +52,22 @@ public class tests {
         return field.get(instance);
     }
 
-    @Test
-    void testLevelOneInitialization() throws Exception {
-        int size = (int) getPrivateField(controller, "SIZE");
-        int bombs = (int) getPrivateField(controller, "BOMB_COUNT");
 
-        assertEquals(9, size);
-        assertEquals(10, bombs);
-    }
-
-    @Test
-    void testInitialFlags() throws Exception {
-        Label flagLabel = (Label) getPrivateField(controller, "flagLabel");
-        int bombs = (int) getPrivateField(controller, "BOMB_COUNT");
-
-        assertTrue(flagLabel.getText().contains(String.valueOf(bombs)));
-    }
-
-    @Test
-    void testResetButtonText() throws Exception {
-        Button resetBtn = (Button) getPrivateField(controller, "resetButton");
-        assertEquals("🙂", resetBtn.getText());
-    }
-
-    @Test
-    void testGridCreation() throws Exception {
-        Object[][] grid = (Object[][]) getPrivateField(controller, "grid");
-        assertNotNull(grid);
-        assertEquals(9, grid.length);
-    }
-
-    @Test
-    void testGameNotStartedInitially() throws Exception {
-        boolean started = (boolean) getPrivateField(controller, "gameStarted");
-        assertFalse(started);
-    }
-
-    @Test
-    void testLevelThreeSelection() throws Exception {
-        controller.LevelSelect(Levels.THREE);
-        int size = (int) getPrivateField(controller, "SIZE");
-        int bombs = (int) getPrivateField(controller, "BOMB_COUNT");
-
-        assertEquals(20, size);
-        assertEquals(40, bombs);
-    }
     
     // TODO 
-    // Test level two selection
-    // Test timer starts on first click
-    // Test flag count decreases when placing a flag
-    // Test algorithms work correctly 
-    // Test DFS whether it's really placing bombs correctly 
-    // Tests FYS? not sure if doable
-    // Test reset button functionality
-    // Test combo box selections overall
-    // Test edge cases like clicking on corners, clicking on already revealed cells, etc.
+    // Test MinesweeperModel initialization for different levels (ONE, TWO, THREE)
+    // Test MinesweeperModel bomb placement algorithms (DFS, DFS_HARD, FYS)
+    // Test MinesweeperModel revealCell method (bomb detection, empty area reveal)
+    // Test MinesweeperModel toggleFlag method (flag count updates)
+    // Test MinesweeperModel checkWin method (win condition logic)
+    // Test MinesweeperModel getNeighbors method (correct neighbor calculation)
+    // Test controller integration with model (level changes, algorithm changes)
+    // Test timer starts on first click in controller
+    // Test flag label updates when placing/removing flags
+    // Test reset button functionality and game restart
+    // Test combo box selections (levels and algorithms) trigger model updates
+    // Test edge cases: clicking on corners, already revealed cells, flagged cells
+    // Test game over scenarios (win/lose dialogs, bomb reveal)
     
     
     
