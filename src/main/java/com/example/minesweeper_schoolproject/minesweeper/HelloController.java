@@ -139,6 +139,17 @@ public class HelloController {
     }
 
     private void handleLeftClick(Cell cell) {
+        if (cell.isOpen && cell.neighboringBombs > 0) {
+            boolean hitBomb = model.revealNeighborsOfNumberedCell(cell);
+            if (hitBomb) {
+                resetButton.setText("\uD83D\uDE1E");
+                showEndGameDialog("BOMBOOCLAAAT!");
+            } else {
+                checkWin();
+            }
+            return;
+        }
+        
         if (cell.isOpen || cell.isFlagged) return;
         if (!model.isGameStarted()) {
             List<Cell> forbidden = new ArrayList<>();

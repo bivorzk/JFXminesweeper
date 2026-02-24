@@ -181,6 +181,28 @@ public class MinesweeperModel {
         }
     }
 
+    public boolean revealNeighborsOfNumberedCell(Cell cell) {
+        if (!cell.isOpen || cell.neighboringBombs == 0) {
+            return false;
+        }
+        
+        boolean hitBomb = false;
+        List<Cell> neighbors = getNeighbors(cell);
+        
+        for (Cell neighbor : neighbors) {
+            if (!neighbor.isOpen && !neighbor.isFlagged) {
+                neighbor.reveal();
+                if (neighbor.hasBomb) {
+                    hitBomb = true;
+                } else if (neighbor.neighboringBombs == 0) {
+                    revealEmptyArea(neighbor);
+                }
+            }
+        }
+        
+        return hitBomb;
+    }
+
     public boolean toggleFlag(Cell cell) {
         if (cell.isOpen) return false;
         if (!cell.isFlagged && flagsPlaced < BOMB_COUNT) {
