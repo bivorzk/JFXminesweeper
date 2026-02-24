@@ -48,4 +48,4 @@ public class Cell extends Button {
             this.getStyleClass().add("count-" + neighboringBombs);
         }
     }
-    }
+}
