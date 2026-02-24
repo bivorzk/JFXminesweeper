@@ -129,9 +129,22 @@ public class HelloController {
                 cell.styleProperty().bind(javafx.beans.binding.Bindings.concat(
                         "-fx-font-size: ", cell.widthProperty().multiply(0.35).asString(), "px;"
                 ));
-                cell.setOnMouseClicked(e -> {
-                    if (e.getButton() == MouseButton.PRIMARY) handleLeftClick(cell);
-                    else if (e.getButton() == MouseButton.SECONDARY) handleRightClick(cell);
+                cell.setOnMousePressed(e -> {
+                    if (e.getButton() == MouseButton.PRIMARY) {
+                        if (cell.isOpen) {
+                            highlightNeighbors(cell);
+                        }
+                    }
+                });
+                cell.setOnMouseReleased(e -> {
+                    if (e.getButton() == MouseButton.PRIMARY) {
+                        removeHighlightFromNeighbors(cell);
+                        if (!cell.isOpen && !cell.isFlagged) {
+                            handleLeftClick(cell);
+                        }
+                    } else if (e.getButton() == MouseButton.SECONDARY) {
+                        handleRightClick(cell);
+                    }
                 });
                 gameGrid.add(cell, x, y);
             }
@@ -139,18 +152,9 @@ public class HelloController {
     }
 
     private void handleLeftClick(Cell cell) {
-        if (cell.isOpen && cell.neighboringBombs > 0) {
-            boolean hitBomb = model.revealNeighborsOfNumberedCell(cell);
-            if (hitBomb) {
-                resetButton.setText("\uD83D\uDE1E");
-                showEndGameDialog("BOMBOOCLAAAT!");
-            } else {
-                checkWin();
-            }
-            return;
-        }
         
-        if (cell.isOpen || cell.isFlagged) return;
+        if (cell.isFlagged) return;
+        
         if (!model.isGameStarted()) {
             List<Cell> forbidden = new ArrayList<>();
             forbidden.add(cell);
@@ -180,6 +184,26 @@ public class HelloController {
         if (model.checkWin()) {
             resetButton.setText("😎");
             showEndGameDialog("WIN!");
+        }
+    }
+
+    private void highlightNeighbors(Cell cell) {
+        List<Cell> neighbors = model.getNeighbors(cell);
+        
+        // Add highlight style to neighbors
+        for (Cell neighbor : neighbors) {
+            if (!neighbor.getStyleClass().contains("highlighted")) {
+                neighbor.getStyleClass().add("highlighted");
+            }
+        }
+    }
+    
+    private void removeHighlightFromNeighbors(Cell cell) {
+        List<Cell> neighbors = model.getNeighbors(cell);
+        
+        // Remove highlight style from neighbors
+        for (Cell neighbor : neighbors) {
+            neighbor.getStyleClass().remove("highlighted");
         }
     }
 

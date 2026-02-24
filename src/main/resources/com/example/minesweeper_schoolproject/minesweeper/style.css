@@ -48,6 +48,18 @@
     -fx-text-fill: #FF0000;
 
 }
+
+.highlighted {
+    -fx-background-color: #E5B47D;
+    -fx-border-color: #C19A6B;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(218, 160, 109, 0.6), 8, 0.4, 0, 0);
+}
+
+.highlighted.count-1 { -fx-text-fill: blue; }
+.highlighted.count-2 { -fx-text-fill: green; }
+.highlighted.count-3 { -fx-text-fill: red; }
+.highlighted.count-4 { -fx-text-fill: darkblue; }
 .count-1 { -fx-text-fill: blue; -fx-font-weight: bold;  -fx-font-family:"fontsweeper"; }
 .count-2 { -fx-text-fill: green; -fx-font-weight: bold; ;-fx-font-family:"fontsweeper"; }
 .count-3 { -fx-text-fill: red; -fx-font-weight: bold; -fx-font-family:"fontsweeper"; }
