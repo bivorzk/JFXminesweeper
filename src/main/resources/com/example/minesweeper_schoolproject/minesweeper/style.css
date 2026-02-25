@@ -50,7 +50,7 @@
 }
 
 .highlighted {
-    -fx-background-color: #E5B47D;
+    -fx-background-color: #DAA06D;
     -fx-border-color: #C19A6B;
     -fx-border-width: 2;
     -fx-effect: dropshadow(gaussian, rgba(218, 160, 109, 0.6), 8, 0.4, 0, 0);
